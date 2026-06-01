@@ -18,8 +18,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product implements Serializable {
-    private static long cnt = 1;
-
     private long id;
     private String name;
     private int price;
@@ -27,17 +25,9 @@ public class Product implements Serializable {
 
 
     public Product(String name, int price, int stock) {
-        this.id = cnt++;
         this.name = name;
         this.price = price;
         this.stock = stock;
-    }
-
-    public void updatedProduct(Product updateProduct) {
-        this.name = updateProduct.name;
-        this.price = updateProduct.price;
-        this.stock = updateProduct.stock;
-
     }
 
     @Override
