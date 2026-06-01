@@ -80,7 +80,7 @@ TCP-IP-main/
     main/
       java/
         common/
-        dto/
+        domain/
         exception/
         product/
         service/

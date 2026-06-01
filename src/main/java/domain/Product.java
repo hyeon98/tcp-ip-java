@@ -1,14 +1,19 @@
-package dto;
+package domain;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/** TODO
+ * 상품의 상태를 표현한다.
+ * 상품의 핵심 변경 규칙을 가진다.
+ */
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto implements Serializable {
+public class Product implements Serializable {
     private static long cnt = 1;
     private long id;
     private String name;
@@ -16,14 +21,14 @@ public class ProductDto implements Serializable {
     private int stock;
 
 
-    public ProductDto(String name, int price, int stock) {
+    public Product(String name, int price, int stock) {
         this.id = cnt++;
         this.name = name;
         this.price = price;
         this.stock = stock;
     }
 
-    public ProductDto updatedProduct(ProductDto updateProduct) {
+    public Product updatedProduct(Product updateProduct) {
         this.name = updateProduct.name;
         this.price = updateProduct.price;
         this.stock = updateProduct.stock;

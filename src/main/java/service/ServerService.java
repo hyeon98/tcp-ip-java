@@ -3,16 +3,16 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.simple.JSONObject;
-import dto.ProductDto;
+import domain.Product;
 
 public class ServerService {
 
-    static List<ProductDto> productList = new ArrayList<>();
+    static List<Product> productList = new ArrayList<>();
     static final String INVALID_PRODUCT_NUMBER_MESSAGE = "유효하지 않은 상품 번호입니다.";
 
     public List<String> getProductList() {
         List<String> result = new ArrayList<>();
-        for (ProductDto product : productList) {
+        for (Product product : productList) {
             result.add(product.toString());
         }
         return result;
@@ -35,7 +35,7 @@ public class ServerService {
         String productName = data.get("name").toString();
         int productPrice = Integer.parseInt(data.get("price").toString());
         int productStock = Integer.parseInt(data.get("stock").toString());
-        productList.add(new ProductDto(productName, productPrice, productStock));
+        productList.add(new Product(productName, productPrice, productStock));
     }
 
     public synchronized void updateProduct(JSONObject data) {
@@ -49,8 +49,8 @@ public class ServerService {
         String updatedProductName = data.get("name").toString();
         int updatedProductPrice = Integer.parseInt(data.get("price").toString());
         int updatedProductStock = Integer.parseInt(data.get("stock").toString());
-        ProductDto product = findById(productId);
-        ProductDto updateProduct = new ProductDto(productId, updatedProductName, updatedProductPrice, updatedProductStock);
+        Product product = findById(productId);
+        Product updateProduct = new Product(productId, updatedProductName, updatedProductPrice, updatedProductStock);
 
         product.updatedProduct(updateProduct);
     }
@@ -72,7 +72,7 @@ public class ServerService {
 
     public boolean isValidProductId(long id) {
         boolean isValid = false;
-        for (ProductDto product : productList) {
+        for (Product product : productList) {
             if (product.getId() == id) {
                 isValid = !isValid;
                 break;
@@ -81,9 +81,9 @@ public class ServerService {
         return isValid;
     }
 
-    public ProductDto findById(long id) {
+    public Product findById(long id) {
         int index = -1;
-        for (ProductDto product : productList) {
+        for (Product product : productList) {
             if (product.getId() == id) {
                 index = productList.indexOf(product);
                 break;
