@@ -18,8 +18,8 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/tcp_product?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
-                <property name="username" value="root"/>
-                <property name="password" value="1234"/>
+                <property name="username" value="tcp_user"/>
+                <property name="password" value="tcp_pass"/>
             </dataSource>
         </environment>
     </environments>
