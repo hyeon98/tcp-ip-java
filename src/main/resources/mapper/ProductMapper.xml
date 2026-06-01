@@ -5,7 +5,7 @@
 
 <mapper namespace="mapper.ProductMapper">
 
-    <resultMap id="productResultMap" type="product.Product">
+    <resultMap id="ProductResultMap" type="domain.Product">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="price" column="price"/>
@@ -22,7 +22,7 @@
         ORDER BY id
     </select>
 
-    <select id="findById" parameterType="id" resultMap="ProductResultMap">
+    <select id="findById" parameterType="long" resultMap="ProductResultMap">
         SELECT
             id,
             name,
