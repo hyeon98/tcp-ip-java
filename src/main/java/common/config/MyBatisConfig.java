@@ -1,28 +1,26 @@
 package common.config;
 
+import java.io.IOException;
+import java.io.Reader;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import java.io.IOException;
-import java.io.Reader;
-
 public class MyBatisConfig {
 
-    private static final SqlSessionFactory SQL_SESSION_FACTORY = createSqlSession();
+    private static final SqlSessionFactory SQL_SESSION_FACTORY = createSqlSessionFactory();
 
     private MyBatisConfig() {
     }
 
-    private static SqlSessionFactory createSqlSession() {
+    private static SqlSessionFactory createSqlSessionFactory() {
         try {
-            String resource = "mybatis-config.xml";
-            Reader reader = Resources.getResourceAsReader(resource);
+            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
 
             return new SqlSessionFactoryBuilder().build(reader);
         } catch (IOException e) {
-            throw new ExceptionInInitializerError(e);
+            throw new IllegalStateException("MyBatis 설정 파일을 찾을 수 없습니다.", e);
         }
     }
 
