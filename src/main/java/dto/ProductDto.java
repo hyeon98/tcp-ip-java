@@ -9,26 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto implements Serializable {
-    private static long cnt = 1;
-    private long id;
+
+    private Long id;
     private String name;
     private int price;
     private int stock;
 
-
     public ProductDto(String name, int price, int stock) {
-        this.id = cnt++;
         this.name = name;
         this.price = price;
         this.stock = stock;
-    }
-
-    public ProductDto updatedProduct(ProductDto updateProduct) {
-        this.name = updateProduct.name;
-        this.price = updateProduct.price;
-        this.stock = updateProduct.stock;
-
-        return this;
     }
 
     @Override
