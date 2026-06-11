@@ -1,5 +1,11 @@
 package product;
 
+import common.Casting;
+import common.handler.DataHandler;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import service.ServerService;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,31 +17,26 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import service.ServerService;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
-import common.Casting;
-import common.handler.DataHandler;
 
 /**
  * Thread vs Runnable
  * [Thread 클래스]
  * 1️⃣ Java 에서는 다중 상속이 불가능 하므로,
- *    Thread 클래스를 상속하면 다른 클래스를 상속 받을 수 없습니다.
+ * Thread 클래스를 상속하면 다른 클래스를 상속 받을 수 없습니다.
  * 2️⃣ Thread 클래스는 Runnable 인터페이스를 구현하고 있으며,
- *    이를 상속받으면 새로운 스레드를 생성할 때 더 많은 자원이 필요합니다.
+ * 이를 상속받으면 새로운 스레드를 생성할 때 더 많은 자원이 필요합니다.
  * 3️⃣ Thread 클래스를 상속하면 동작을 수정하기 위해 run() 메서드를 오버라이드해야 합니다.
- *
+ * <p>
  * [Runnable 인터페이스]
  * 1️⃣ Runnbale 인터페이스는 단일 추상ㅇ 메소드(run())를 갖는 함수형 인터페이스입니다.
- *    따라서 람다식으로도 구현이 가능합니다.
+ * 따라서 람다식으로도 구현이 가능합니다.
  * 2️⃣ Runnable 인터페이스를 구현하는 클래스는 run() 메서드를 반드시 구현해야 합니다.
  * 3️⃣ Runnable 인터페이스를 구현하면 다른 클래스를 상속받을 수 있어
- *    다중 상속의 유연성을 제공합니다.
+ * 다중 상속의 유연성을 제공합니다.
  * 4️⃣ 인터페이스 구현은 재사용성이 높고,
- *    코드의 일관성을 유지할 수 있어서 Thread 상속보다 효율적입니다.
+ * 코드의 일관성을 유지할 수 있어서 Thread 상속보다 효율적입니다.
  * 5️⃣ Runnable을 사용하는 스레드는 Thread 객체를 통해 실행되므로,
- *    스레드 풀과 같은 고급 스레드 관리 기능을 사용할 수 있습니다.
+ * 스레드 풀과 같은 고급 스레드 관리 기능을 사용할 수 있습니다.
  */
 public class ProductServer {
 
@@ -63,9 +64,9 @@ public class ProductServer {
                 System.out.println(getCurrentTime() + " Waiting for a connection request.");
                 Socket clientSocket = serverSocket.accept(); // Socket for communication with client
                 System.out.println(
-                    getCurrentTime()
-                    + " A connection request has been received from "
-                    + clientSocket.getInetAddress()
+                        getCurrentTime()
+                                + " A connection request has been received from "
+                                + clientSocket.getInetAddress()
                 );
 
                 Runnable runnable = new ProductServerImpl(clientSocket);
@@ -73,8 +74,8 @@ public class ProductServer {
             }
         } catch (IOException e) {
             System.out.println(
-                getCurrentTime() + " Error occurred while creating the server socket: "
-                    + e.getMessage());
+                    getCurrentTime() + " Error occurred while creating the server socket: "
+                            + e.getMessage());
         }
 
         /**
@@ -86,9 +87,11 @@ public class ProductServer {
 
     public static class ProductServerImpl implements Runnable {
         private Socket clientSocket;
+
         ProductServerImpl(Socket clientSocket) {
             this.clientSocket = clientSocket;
         }
+
         @Override
         public void run() {
             serverService = new ServerService();
@@ -97,9 +100,9 @@ public class ProductServer {
                  * Initialize the streams
                  */
                 BufferedReader clientReader = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()));
+                        new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter clientWriter = new PrintWriter(clientSocket.getOutputStream(),
-                    true);
+                        true);
 
                 while (true) {
 
@@ -128,9 +131,9 @@ public class ProductServer {
             } catch (IOException e) {
                 dataHandler.setStatus("fail");
                 System.out.println(
-                    getCurrentTime()
-                        + " Error occurred during communication with the client: "
-                        + e.getMessage());
+                        getCurrentTime()
+                                + " Error occurred during communication with the client: "
+                                + e.getMessage());
             }
             System.out.println(getCurrentTime() + " Client connection closed.");
 
@@ -157,9 +160,9 @@ public class ProductServer {
                 String menuDataString = clientReader.readLine();
 
                 System.out.println(
-                    getCurrentTime()
-                        + "[" + Thread.currentThread().getName() + "] "
-                        + menuDataString
+                        getCurrentTime()
+                                + "[" + Thread.currentThread().getName() + "] "
+                                + menuDataString
                 );
 
                 JSONObject jsonData = Casting.toJson(menuDataString);
@@ -182,8 +185,10 @@ public class ProductServer {
             } catch (ParseException e) {
                 dataHandler.setStatus("fail");
                 System.out.println(
-                    getCurrentTime() + " Error occurred while parsing JSON data: "
-                        + e.getMessage());
+                        getCurrentTime() + " Error occurred while parsing JSON data: "
+                                + e.getMessage());
+                throw new RuntimeException(e);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
