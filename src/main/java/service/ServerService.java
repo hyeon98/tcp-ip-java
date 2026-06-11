@@ -11,7 +11,6 @@ import java.util.List;
 public class ServerService {
 
     private final ProductRepository repository = new ProductRepository();
-    static List<ProductDto> productList = new ArrayList<>();
     static final String INVALID_PRODUCT_NUMBER_MESSAGE = "유효하지 않은 상품 번호입니다.";
 
     public List<String> getProductList() {
@@ -55,10 +54,9 @@ public class ServerService {
         String updatedProductName = data.get("name").toString();
         int updatedProductPrice = Integer.parseInt(data.get("price").toString());
         int updatedProductStock = Integer.parseInt(data.get("stock").toString());
-        ProductDto product = findById(productId);
-        ProductDto updateProduct = new ProductDto(productId, updatedProductName, updatedProductPrice, updatedProductStock);
+        ProductDto updateProduct = new ProductDto(updatedProductName, updatedProductPrice, updatedProductStock);
 
-        product.updatedProduct(updateProduct);
+        repository.update(productId, updateProduct);
     }
 
     public synchronized void deleteProduct(JSONObject data) {
@@ -68,8 +66,7 @@ public class ServerService {
             System.out.println(INVALID_PRODUCT_NUMBER_MESSAGE);
             return;
         }
-
-        productList.remove(findById(productId));
+        repository.delete(productId);
     }
 
     public void exitApplication() {
@@ -77,24 +74,6 @@ public class ServerService {
     }
 
     public boolean isValidProductId(long id) {
-        boolean isValid = false;
-        for (ProductDto product : productList) {
-            if (product.getId() == id) {
-                isValid = !isValid;
-                break;
-            }
-        }
-        return isValid;
-    }
-
-    public ProductDto findById(long id) {
-        int index = -1;
-        for (ProductDto product : productList) {
-            if (product.getId() == id) {
-                index = productList.indexOf(product);
-                break;
-            }
-        }
-        return productList.get(index);
+        return repository.existsById(id);
     }
 }
